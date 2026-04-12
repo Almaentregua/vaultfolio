@@ -6,6 +6,7 @@ Tracker personal de inversiones con soporte multi-moneda y seguimiento históric
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.111+-009688?style=flat&logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5+-3178C6?style=flat&logo=typescript&logoColor=white)
+![License](https://img.shields.io/badge/Licencia-MIT-green?style=flat)
 
 ---
 
@@ -189,3 +190,9 @@ make dev-frontend     # Inicia Vite en :5173
 | [docs/usuario.md](docs/usuario.md) | Guía de uso de la interfaz web |
 
 La API también tiene documentación interactiva generada automáticamente en [http://localhost:8000/docs](http://localhost:8000/docs) (Swagger UI) cuando el backend está corriendo.
+
+---
+
+## Licencia
+
+MIT — ver [LICENSE](LICENSE) para más detalles.
