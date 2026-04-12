@@ -1,7 +1,7 @@
 .PHONY: install dev-backend dev-frontend dev install-backend install-frontend
 
 install-backend:
-	cd backend && python -m venv .venv && .venv/bin/pip install -e ".[dev]"
+	cd backend && python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 
 install-frontend:
 	cd frontend && npm install

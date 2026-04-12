@@ -10,7 +10,7 @@ Verificar que las siguientes herramientas estén instaladas:
 
 | Herramienta | Versión mínima | Verificar |
 |---|---|---|
-| Python | 3.11 | `python --version` |
+| Python | 3.11 | `python3 --version` |
 | pip | 23+ | `pip --version` |
 | Node.js | 18 | `node --version` |
 | npm | 9 | `npm --version` |
@@ -39,14 +39,14 @@ El entorno virtual aísla las dependencias del proyecto del sistema.
 **Linux / macOS:**
 ```bash
 cd backend
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 ```
 
 **Windows (PowerShell):**
 ```powershell
 cd backend
-python -m venv .venv
+python3 -m venv .venv
 .venv\Scripts\Activate.ps1
 ```
 
@@ -152,7 +152,7 @@ El `Makefile` en la raíz del proyecto define atajos para las operaciones más c
 | Comando | Equivalente | Descripción |
 |---|---|---|
 | `make install` | — | Instala backend y frontend |
-| `make install-backend` | `cd backend && python -m venv .venv && .venv/bin/pip install -e ".[dev]"` | Solo backend |
+| `make install-backend` | `cd backend && python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"` | Solo backend |
 | `make install-frontend` | `cd frontend && npm install` | Solo frontend |
 | `make dev-backend` | `cd backend && .venv/bin/uvicorn app.main:app --reload --port 8000` | Inicia API |
 | `make dev-frontend` | `cd frontend && npm run dev` | Inicia UI |

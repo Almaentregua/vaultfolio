@@ -63,7 +63,7 @@ Vaultfolio es una aplicación web personal para registrar y visualizar el capita
 
 ## Prerequisitos
 
-- **Python** ≥ 3.11 — `python --version`
+- **Python** ≥ 3.11 — `python3 --version`
 - **Node.js** ≥ 18 — `node --version`
 - **npm** ≥ 9 — `npm --version`
 
