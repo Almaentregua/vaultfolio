@@ -44,3 +44,23 @@ export function formatDateShort(dateStr: string): string {
     month: "short",
   });
 }
+
+/**
+ * Descarga una URL como archivo en el navegador sin abrir una nueva pestaña.
+ * Compatible con el proxy de Vite (/api → backend).
+ */
+export async function downloadCsv(url: string, filename: string): Promise<void> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Error al exportar: ${response.statusText}`);
+  }
+  const blob = await response.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = objectUrl;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(objectUrl);
+}

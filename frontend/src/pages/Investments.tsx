@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Plus, Trash2, TrendingUp } from "lucide-react";
-import { assetTypesApi, investmentsApi } from "@/services/api";
+import { FileDown, Plus, Trash2, TrendingUp } from "lucide-react";
+import { assetTypesApi, exportsApi, investmentsApi } from "@/services/api";
 import type { CreateInvestmentData, Investment } from "@/types";
 import { COMMON_CURRENCIES } from "@/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -261,10 +261,28 @@ export default function Investments() {
             {investments.length} inversiones registradas
           </p>
         </div>
-        <button className="btn-primary" onClick={() => setShowAdd(true)}>
-          <Plus className="w-4 h-4" />
-          Nueva inversión
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            className="btn-secondary"
+            onClick={() => exportsApi.records()}
+            title="Exportar historial de valores"
+          >
+            <FileDown className="w-4 h-4" />
+            Exportar historial
+          </button>
+          <button
+            className="btn-secondary"
+            onClick={() => exportsApi.investments()}
+            title="Exportar lista de inversiones"
+          >
+            <FileDown className="w-4 h-4" />
+            Exportar inversiones
+          </button>
+          <button className="btn-primary" onClick={() => setShowAdd(true)}>
+            <Plus className="w-4 h-4" />
+            Nueva inversión
+          </button>
+        </div>
       </div>
 
       <div className="card overflow-hidden">

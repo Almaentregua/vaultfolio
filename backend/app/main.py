@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
 from app.models import AssetType, ExchangeRate, Investment, InvestmentRecord  # noqa: F401
-from app.routers import asset_types, exchange_rates, investments, portfolio
+from app.routers import asset_types, exchange_rates, exports, investments, portfolio
 from app.seeds import seed_asset_types
 
 
@@ -35,6 +35,7 @@ app.include_router(asset_types.router)
 app.include_router(investments.router)
 app.include_router(portfolio.router)
 app.include_router(exchange_rates.router)
+app.include_router(exports.router)
 
 
 @app.get("/health", tags=["Health"])

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Download, Plus } from "lucide-react";
-import { exchangeRatesApi } from "@/services/api";
+import { Download, FileDown, Plus } from "lucide-react";
+import { exchangeRatesApi, exportsApi } from "@/services/api";
 import type { CreateExchangeRateData } from "@/types";
 import { COMMON_CURRENCIES } from "@/types";
 import { formatDate } from "@/lib/utils";
@@ -54,6 +54,14 @@ export default function ExchangeRates() {
           <button className="btn-secondary" onClick={() => setShowAdd(true)}>
             <Plus className="w-4 h-4" />
             Agregar manual
+          </button>
+          <button
+            className="btn-secondary"
+            onClick={() => exportsApi.exchangeRates(filterBase || undefined)}
+            title="Exportar tipos de cambio como CSV"
+          >
+            <FileDown className="w-4 h-4" />
+            Exportar CSV
           </button>
           <div className="flex gap-1">
             <select

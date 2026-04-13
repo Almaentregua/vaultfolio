@@ -176,6 +176,36 @@ Usar el selector "Filtrar por base" para ver solo los tipos de cambio de una mon
 
 ---
 
+## Exportar datos a CSV
+
+Vaultfolio permite exportar los datos a archivos CSV para analizarlos en Excel, Google Sheets u otras herramientas. Los archivos se descargan directamente desde el navegador con un clic.
+
+### Desde el Dashboard
+
+El botón **Exportar CSV** (ícono de descarga) en la esquina superior derecha descarga el resumen del portfolio en la moneda actualmente seleccionada.
+
+**Archivo generado:** `portfolio_USD.csv` (o la moneda que corresponda)  
+**Columnas:** nombre, tipo de activo, plataforma, moneda original, monto original, monto convertido, moneda destino, porcentaje del portfolio
+
+### Desde Inversiones
+
+Dos botones de exportación en la cabecera de la página:
+
+- **Exportar inversiones** — descarga la lista completa de inversiones (activas e inactivas) con el valor actual de cada una
+- **Exportar historial** — descarga todos los registros de valor histórico de todas las inversiones
+
+### Desde Tipos de Cambio
+
+El botón **Exportar CSV** descarga los tipos de cambio actualmente visibles en la tabla. Si hay un filtro de moneda base activo, el CSV solo incluirá esos registros.
+
+### Compatibilidad con Excel
+
+Los archivos se generan con **UTF-8 + BOM**, lo que permite a Excel en Windows reconocer automáticamente el formato sin que aparezcan caracteres extraños en palabras con tildes o ñ.
+
+En Google Sheets: ir a *Archivo → Importar → Subir* y seleccionar el archivo CSV.
+
+---
+
 ## Preguntas frecuentes
 
 **¿Qué pasa si no hay tipo de cambio para una de mis monedas?**

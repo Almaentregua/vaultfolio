@@ -11,8 +11,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { TrendingUp, Wallet } from "lucide-react";
-import { portfolioApi } from "@/services/api";
+import { FileDown, TrendingUp, Wallet } from "lucide-react";
+import { exportsApi, portfolioApi } from "@/services/api";
 import { COMMON_CURRENCIES } from "@/types";
 import { formatCurrency, formatDateShort, formatNumber } from "@/lib/utils";
 
@@ -39,17 +39,27 @@ export default function Dashboard() {
             Resumen de tu patrimonio
           </p>
         </div>
-        <select
-          value={currency}
-          onChange={(e) => setCurrency(e.target.value)}
-          className="input w-auto"
-        >
-          {COMMON_CURRENCIES.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-2">
+          <select
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value)}
+            className="input w-auto"
+          >
+            {COMMON_CURRENCIES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+          <button
+            className="btn-secondary"
+            onClick={() => exportsApi.portfolio(currency)}
+            title="Exportar portfolio como CSV"
+          >
+            <FileDown className="w-4 h-4" />
+            Exportar CSV
+          </button>
+        </div>
       </div>
 
       {/* Net Worth Card */}

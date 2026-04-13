@@ -1,4 +1,5 @@
 import axios from "axios";
+import { downloadCsv } from "@/lib/utils";
 import type {
   AssetType,
   CreateAssetTypeData,
@@ -74,6 +75,37 @@ export const portfolioApi = {
         params: { currency, days },
       })
       .then((r) => r.data),
+};
+
+// ── Exports ───────────────────────────────────────────────────────────────────
+
+export const exportsApi = {
+  /** Descarga todas las inversiones (activas e inactivas) con su valor actual. */
+  investments: () =>
+    downloadCsv("/api/exports/investments.csv", "inversiones.csv"),
+
+  /** Descarga el historial de registros. Si se pasa `investmentId`, filtra por esa inversión. */
+  records: (investmentId?: number) => {
+    const url = investmentId
+      ? `/api/exports/records.csv?investment_id=${investmentId}`
+      : "/api/exports/records.csv";
+    return downloadCsv(url, "registros.csv");
+  },
+
+  /** Descarga el resumen del portfolio convertido a la moneda indicada. */
+  portfolio: (currency = "USD") =>
+    downloadCsv(
+      `/api/exports/portfolio.csv?currency=${currency}`,
+      `portfolio_${currency}.csv`
+    ),
+
+  /** Descarga los tipos de cambio almacenados. Si se pasa `base`, filtra por moneda base. */
+  exchangeRates: (base?: string) => {
+    const url = base
+      ? `/api/exports/exchange-rates.csv?base=${base}`
+      : "/api/exports/exchange-rates.csv";
+    return downloadCsv(url, "tipos_de_cambio.csv");
+  },
 };
 
 // ── Exchange Rates ────────────────────────────────────────────────────────────

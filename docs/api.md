@@ -441,6 +441,77 @@ Descarga los tipos de cambio en tiempo real desde [open.er-api.com](https://open
 
 ---
 
+## Exportaciones — `/exports`
+
+Todos los endpoints de este grupo retornan un archivo CSV listo para descargar. El archivo usa codificación **UTF-8 con BOM** para compatibilidad con Microsoft Excel en Windows.
+
+El nombre del archivo incluye la fecha actual en formato `YYYYMMDD`. Ejemplo: `inversiones_20260412.csv`.
+
+### `GET /exports/investments.csv`
+
+Exporta todas las inversiones (activas e inactivas) con su valor actual.
+
+**Columnas:** `id`, `nombre`, `tipo_activo`, `plataforma`, `moneda`, `monto_actual`, `ultima_actualizacion`, `estado`, `notas`, `fecha_creacion`
+
+**Ejemplo de fila:**
+```
+1,Fondo Mutuo Larraín Vial,Fondos Mutuos,Larraín Vial,CLP,5250000.000000,2024-03-01T00:00:00,activa,,2024-01-15T10:00:00
+```
+
+---
+
+### `GET /exports/records.csv`
+
+Exporta el historial completo de registros de valor de todas las inversiones.
+
+**Query params:**
+
+| Parámetro | Tipo | Default | Descripción |
+|---|---|---|---|
+| `investment_id` | integer | — | Filtrar por ID de inversión (opcional) |
+
+**Columnas:** `id`, `inversion_id`, `nombre_inversion`, `moneda`, `monto`, `fecha_registro`, `nota`
+
+---
+
+### `GET /exports/portfolio.csv`
+
+Exporta el resumen del portfolio convertido a la moneda indicada, equivalente a lo que muestra el Dashboard.
+
+**Query params:**
+
+| Parámetro | Tipo | Default | Descripción |
+|---|---|---|---|
+| `currency` | string | `USD` | Moneda destino para la conversión |
+
+**Columnas:** `nombre`, `tipo_activo`, `plataforma`, `moneda_original`, `monto_original`, `monto_convertido`, `moneda_destino`, `porcentaje`
+
+**Ejemplo cURL:**
+```bash
+curl "http://localhost:8000/exports/portfolio.csv?currency=CLP" -o portfolio_CLP.csv
+```
+
+---
+
+### `GET /exports/exchange-rates.csv`
+
+Exporta los tipos de cambio almacenados en la base de datos.
+
+**Query params:**
+
+| Parámetro | Tipo | Default | Descripción |
+|---|---|---|---|
+| `base` | string | — | Filtrar por moneda base (ej: `USD`) |
+
+**Columnas:** `moneda_base`, `moneda_destino`, `tasa`, `fecha`
+
+**Ejemplo cURL:**
+```bash
+curl "http://localhost:8000/exports/exchange-rates.csv?base=USD" -o tipos_de_cambio_USD.csv
+```
+
+---
+
 ## Health — `/health`
 
 ### `GET /health`
