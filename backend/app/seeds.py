@@ -2,6 +2,7 @@ from sqlalchemy import select
 
 from app.database import SessionLocal
 from app.models.asset_type import AssetType
+from app.models.platform import Platform
 
 DEFAULT_ASSET_TYPES = [
     {
@@ -48,6 +49,15 @@ DEFAULT_ASSET_TYPES = [
     },
 ]
 
+DEFAULT_PLATFORMS = [
+    {"name": "Fraccional", "description": "Plataforma de inversión en activos alternativos fraccionados"},
+    {"name": "Fintual", "description": "Administradora de fondos mutuos digital"},
+    {"name": "Itaú", "description": "Banco Itaú — inversiones y depósitos"},
+    {"name": "BCI", "description": "Banco de Crédito e Inversiones"},
+    {"name": "Buda.com", "description": "Exchange de criptomonedas"},
+    {"name": "Banco Estado", "description": "Banco Estado de Chile"},
+]
+
 
 def seed_asset_types() -> None:
     db = SessionLocal()
@@ -55,6 +65,17 @@ def seed_asset_types() -> None:
         for data in DEFAULT_ASSET_TYPES:
             if not db.scalar(select(AssetType).where(AssetType.slug == data["slug"])):
                 db.add(AssetType(**data))
+        db.commit()
+    finally:
+        db.close()
+
+
+def seed_platforms() -> None:
+    db = SessionLocal()
+    try:
+        for data in DEFAULT_PLATFORMS:
+            if not db.scalar(select(Platform).where(Platform.name == data["name"])):
+                db.add(Platform(**data))
         db.commit()
     finally:
         db.close()

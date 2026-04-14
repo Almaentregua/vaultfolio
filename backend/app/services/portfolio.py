@@ -74,7 +74,7 @@ def get_portfolio_summary(db: Session, target_currency: str) -> PortfolioSummary
                 name=inv.name,
                 asset_type_name=inv.asset_type.name,
                 asset_type_color=inv.asset_type.color,
-                platform=inv.platform,
+                platform=inv.platform.name if inv.platform else None,
                 currency=inv.currency,
                 current_amount=current_amount,
                 current_amount_converted=converted,

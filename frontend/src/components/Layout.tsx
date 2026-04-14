@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 import {
   BarChart2,
+  Building2,
   DollarSign,
   Layers,
   LayoutDashboard,
@@ -12,6 +13,7 @@ const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/investments", label: "Inversiones", icon: BarChart2 },
   { to: "/asset-types", label: "Tipos de Activo", icon: Layers },
+  { to: "/platforms", label: "Plataformas", icon: Building2 },
   { to: "/exchange-rates", label: "Tipos de Cambio", icon: DollarSign },
 ];
 

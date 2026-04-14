@@ -5,9 +5,11 @@ import type {
   CreateAssetTypeData,
   CreateExchangeRateData,
   CreateInvestmentData,
+  CreatePlatformData,
   ExchangeRate,
   Investment,
   InvestmentRecord,
+  Platform,
   PortfolioHistory,
   PortfolioSummary,
   UpdateInvestmentData,
@@ -29,6 +31,17 @@ export const assetTypesApi = {
   update: (id: number, data: Partial<CreateAssetTypeData>) =>
     http.patch<AssetType>(`/asset-types/${id}`, data).then((r) => r.data),
   delete: (id: number) => http.delete(`/asset-types/${id}`),
+};
+
+// ── Platforms ─────────────────────────────────────────────────────────────────
+
+export const platformsApi = {
+  list: () => http.get<Platform[]>("/platforms/").then((r) => r.data),
+  create: (data: CreatePlatformData) =>
+    http.post<Platform>("/platforms/", data).then((r) => r.data),
+  update: (id: number, data: Partial<CreatePlatformData>) =>
+    http.patch<Platform>(`/platforms/${id}`, data).then((r) => r.data),
+  delete: (id: number) => http.delete(`/platforms/${id}`),
 };
 
 // ── Investments ───────────────────────────────────────────────────────────────

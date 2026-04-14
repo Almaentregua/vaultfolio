@@ -77,7 +77,7 @@ def export_investments(db: Session = Depends(get_db)) -> StreamingResponse:
                 "id": inv.id,
                 "nombre": inv.name,
                 "tipo_activo": inv.asset_type.name,
-                "plataforma": inv.platform or "",
+                "plataforma": inv.platform.name if inv.platform else "",
                 "moneda": inv.currency,
                 "monto_actual": str(latest.amount) if latest else "",
                 "ultima_actualizacion": latest.recorded_at.isoformat() if latest else "",

@@ -9,12 +9,21 @@ export interface AssetType {
   investment_count: number;
 }
 
+export interface Platform {
+  id: number;
+  name: string;
+  description: string | null;
+  created_at: string;
+  investment_count: number;
+}
+
 export interface Investment {
   id: number;
   name: string;
   asset_type_id: number;
   asset_type: AssetType;
-  platform: string | null;
+  platform_id: number | null;
+  platform: Platform | null;
   currency: string;
   notes: string | null;
   is_active: boolean;
@@ -103,7 +112,7 @@ export interface CreateAssetTypeData {
 export interface CreateInvestmentData {
   name: string;
   asset_type_id: number;
-  platform?: string;
+  platform_id?: number;
   currency: string;
   notes?: string;
   initial_amount?: number;
@@ -113,10 +122,15 @@ export interface CreateInvestmentData {
 export interface UpdateInvestmentData {
   name?: string;
   asset_type_id?: number;
-  platform?: string;
+  platform_id?: number;
   currency?: string;
   notes?: string;
   is_active?: boolean;
+}
+
+export interface CreatePlatformData {
+  name: string;
+  description?: string;
 }
 
 export interface CreateExchangeRateData {

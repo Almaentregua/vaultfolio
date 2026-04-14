@@ -4,6 +4,7 @@ import Dashboard from "@/pages/Dashboard";
 import Investments from "@/pages/Investments";
 import AssetTypes from "@/pages/AssetTypes";
 import ExchangeRates from "@/pages/ExchangeRates";
+import Platforms from "@/pages/Platforms";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/investments" element={<Investments />} />
         <Route path="/asset-types" element={<AssetTypes />} />
+        <Route path="/platforms" element={<Platforms />} />
         <Route path="/exchange-rates" element={<ExchangeRates />} />
       </Route>
     </Routes>

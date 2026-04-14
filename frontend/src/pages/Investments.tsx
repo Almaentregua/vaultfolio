@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FileDown, Plus, Trash2, TrendingUp } from "lucide-react";
-import { assetTypesApi, exportsApi, investmentsApi } from "@/services/api";
+import { assetTypesApi, exportsApi, investmentsApi, platformsApi } from "@/services/api";
 import type { CreateInvestmentData, Investment } from "@/types";
 import { COMMON_CURRENCIES } from "@/types";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/utils";
@@ -98,12 +98,16 @@ function AddInvestmentModal({ onClose }: { onClose: () => void }) {
     queryKey: ["asset-types"],
     queryFn: assetTypesApi.list,
   });
+  const { data: platforms = [] } = useQuery({
+    queryKey: ["platforms"],
+    queryFn: platformsApi.list,
+  });
 
   const [form, setForm] = useState<CreateInvestmentData>({
     name: "",
     asset_type_id: assetTypes[0]?.id ?? 0,
     currency: "USD",
-    platform: "",
+    platform_id: undefined,
     notes: "",
     initial_amount: undefined,
   });
@@ -113,7 +117,7 @@ function AddInvestmentModal({ onClose }: { onClose: () => void }) {
       investmentsApi.create({
         ...form,
         asset_type_id: Number(form.asset_type_id),
-        platform: form.platform || undefined,
+        platform_id: form.platform_id || undefined,
         notes: form.notes || undefined,
         initial_date: form.initial_amount
           ? new Date().toISOString()
@@ -178,13 +182,20 @@ function AddInvestmentModal({ onClose }: { onClose: () => void }) {
 
         <div>
           <label className="label">Plataforma (opcional)</label>
-          <input
-            type="text"
+          <select
             className="input"
-            value={form.platform}
-            onChange={(e) => set("platform", e.target.value)}
-            placeholder="Ej: Fintual, Buda, Banco Estado"
-          />
+            value={form.platform_id ?? ""}
+            onChange={(e) =>
+              set("platform_id", e.target.value ? Number(e.target.value) : undefined)
+            }
+          >
+            <option value="">Sin plataforma</option>
+            {platforms.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
@@ -323,7 +334,7 @@ export default function Investments() {
                       {inv.asset_type.name}
                     </span>
                   </td>
-                  <td className="px-6 py-3 text-gray-500">{inv.platform ?? "—"}</td>
+                  <td className="px-6 py-3 text-gray-500">{inv.platform?.name ?? "—"}</td>
                   <td className="px-6 py-3 text-right font-mono">
                     {inv.current_amount != null ? (
                       <>
