@@ -23,8 +23,8 @@ export function formatCurrency(
   }
 }
 
-export function formatNumber(amount: number, decimals = 2): string {
-  return amount.toLocaleString("es-CL", {
+export function formatNumber(amount: number | string, decimals = 2): string {
+  return Number(amount).toLocaleString("es-CL", {
     minimumFractionDigits: 0,
     maximumFractionDigits: decimals,
   });

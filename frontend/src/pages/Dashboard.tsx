@@ -216,7 +216,8 @@ export default function Dashboard() {
                   </td>
                   <td className="px-6 py-3 text-gray-500">{inv.platform ?? "—"}</td>
                   <td className="px-6 py-3 text-right font-mono text-gray-700">
-                    {formatCurrency(inv.current_amount, inv.currency)}
+                    <span className="text-xs text-gray-400 mr-1.5">{inv.currency}</span>
+                    {formatNumber(inv.current_amount, 2)}
                   </td>
                   <td className="px-6 py-3 text-right font-mono font-semibold text-gray-900">
                     {formatCurrency(inv.current_amount_converted, currency)}

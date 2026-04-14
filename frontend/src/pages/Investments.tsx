@@ -4,7 +4,7 @@ import { FileDown, Plus, Trash2, TrendingUp } from "lucide-react";
 import { assetTypesApi, exportsApi, investmentsApi } from "@/services/api";
 import type { CreateInvestmentData, Investment } from "@/types";
 import { COMMON_CURRENCIES } from "@/types";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate, formatNumber } from "@/lib/utils";
 
 // ── Add Record Modal ──────────────────────────────────────────────────────────
 
@@ -325,9 +325,14 @@ export default function Investments() {
                   </td>
                   <td className="px-6 py-3 text-gray-500">{inv.platform ?? "—"}</td>
                   <td className="px-6 py-3 text-right font-mono">
-                    {inv.current_amount != null
-                      ? formatCurrency(inv.current_amount, inv.currency)
-                      : <span className="text-gray-400">sin registros</span>}
+                    {inv.current_amount != null ? (
+                      <>
+                        <span className="text-xs text-gray-400 mr-1.5">{inv.currency}</span>
+                        {formatNumber(inv.current_amount, 2)}
+                      </>
+                    ) : (
+                      <span className="text-gray-400">sin registros</span>
+                    )}
                   </td>
                   <td className="px-6 py-3 text-gray-500">
                     {inv.last_recorded_at ? formatDate(inv.last_recorded_at) : "—"}
