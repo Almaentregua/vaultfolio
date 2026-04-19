@@ -249,10 +249,29 @@ export default function Investments() {
   const qc = useQueryClient();
   const [showAdd, setShowAdd] = useState(false);
   const [recordTarget, setRecordTarget] = useState<Investment | null>(null);
+  const [filterType, setFilterType] = useState<string>("all");
+  const [filterPlatform, setFilterPlatform] = useState<string>("all");
 
   const { data: investments = [], isLoading } = useQuery({
     queryKey: ["investments"],
     queryFn: () => investmentsApi.list(false),
+  });
+
+  const { data: assetTypes = [] } = useQuery({
+    queryKey: ["asset-types"],
+    queryFn: assetTypesApi.list,
+  });
+
+  const { data: platforms = [] } = useQuery({
+    queryKey: ["platforms"],
+    queryFn: platformsApi.list,
+  });
+
+  const filtered = investments.filter((inv) => {
+    if (filterType !== "all" && inv.asset_type_id !== Number(filterType)) return false;
+    if (filterPlatform === "none") return inv.platform_id == null;
+    if (filterPlatform !== "all" && inv.platform_id !== Number(filterPlatform)) return false;
+    return true;
   });
 
   const deleteMutation = useMutation({
@@ -269,7 +288,9 @@ export default function Investments() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Inversiones</h1>
           <p className="text-sm text-gray-500 mt-0.5">
-            {investments.length} inversiones registradas
+            {filtered.length === investments.length
+              ? `${investments.length} inversiones registradas`
+              : `${filtered.length} de ${investments.length} inversiones`}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -296,6 +317,34 @@ export default function Investments() {
         </div>
       </div>
 
+      <div className="flex items-center gap-3">
+        <select
+          className="input w-auto"
+          value={filterType}
+          onChange={(e) => setFilterType(e.target.value)}
+        >
+          <option value="all">Todos los tipos</option>
+          {assetTypes.map((at) => (
+            <option key={at.id} value={at.id}>
+              {at.name}
+            </option>
+          ))}
+        </select>
+        <select
+          className="input w-auto"
+          value={filterPlatform}
+          onChange={(e) => setFilterPlatform(e.target.value)}
+        >
+          <option value="all">Todas las plataformas</option>
+          <option value="none">Sin plataforma</option>
+          {platforms.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div className="card overflow-hidden">
         {isLoading ? (
           <div className="p-6 space-y-3">
@@ -307,6 +356,12 @@ export default function Investments() {
           <div className="p-12 text-center">
             <p className="text-gray-400 text-sm">
               No hay inversiones aún. ¡Agrega la primera!
+            </p>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="p-12 text-center">
+            <p className="text-gray-400 text-sm">
+              Ninguna inversión coincide con los filtros seleccionados.
             </p>
           </div>
         ) : (
@@ -323,7 +378,7 @@ export default function Investments() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {investments.map((inv) => (
+              {filtered.map((inv) => (
                 <tr key={inv.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-3 font-medium text-gray-900">{inv.name}</td>
                   <td className="px-6 py-3">
