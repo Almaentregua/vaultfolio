@@ -30,8 +30,8 @@ Esta guía describe la arquitectura del proyecto, las convenciones de código y 
 ┌──────────────────────────▼──────────────────────────────┐
 │            SQLite — backend/vaultfolio.db                │
 │                                                         │
-│  asset_types       investments      investment_records  │
-│  exchange_rates                                         │
+│  asset_types       platforms        investments         │
+│  investment_records   exchange_rates                    │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -375,9 +375,12 @@ backend/vaultfolio.db
 | Tabla | Modelo | Descripción |
 |---|---|---|
 | `asset_types` | `AssetType` | Tipos de activo configurables |
+| `platforms` | `Platform` | Plataformas/brokers donde se mantienen inversiones |
 | `investments` | `Investment` | Posiciones de inversión |
 | `investment_records` | `InvestmentRecord` | Historial de valores por inversión |
 | `exchange_rates` | `ExchangeRate` | Tipos de cambio por fecha |
+
+Ver columnas, tipos y relaciones detallados en [`docs/schema.md`](schema.md).
 
 ### Creación
 
