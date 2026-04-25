@@ -31,11 +31,21 @@ class CurrencyBreakdown(BaseModel):
     percentage: float
 
 
+class PlatformBreakdown(BaseModel):
+    platform_id: int | None
+    platform_name: str
+    total_converted: Decimal
+    percentage: float
+    investment_count: int
+    color: str
+
+
 class PortfolioSummary(BaseModel):
     target_currency: str
     total_net_worth: Decimal
     by_asset_type: list[AssetTypeBreakdown]
     by_currency: list[CurrencyBreakdown]
+    by_platform: list[PlatformBreakdown]
     investments: list[InvestmentSummary]
 
 

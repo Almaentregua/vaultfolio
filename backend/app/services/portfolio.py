@@ -10,10 +10,16 @@ from app.schemas.portfolio import (
     AssetTypeBreakdown,
     CurrencyBreakdown,
     InvestmentSummary,
+    PlatformBreakdown,
     PortfolioHistory,
     PortfolioHistoryPoint,
     PortfolioSummary,
 )
+
+_PLATFORM_COLORS = [
+    "#6366f1", "#f59e0b", "#10b981", "#ef4444",
+    "#8b5cf6", "#06b6d4", "#f97316", "#84cc16",
+]
 from app.services.exchange_rate import get_rate
 
 
@@ -36,6 +42,7 @@ def get_portfolio_summary(db: Session, target_currency: str) -> PortfolioSummary
     total = Decimal("0")
     by_asset_type: dict[int, dict] = {}
     by_currency: dict[str, dict] = {}
+    by_platform: dict[int | None, dict] = {}
 
     for inv in investments:
         record = _latest_record(db, inv.id)
@@ -68,6 +75,21 @@ def get_portfolio_summary(db: Session, target_currency: str) -> PortfolioSummary
         by_currency[inv.currency]["total_original"] += current_amount
         by_currency[inv.currency]["total_converted"] += converted
 
+        p_id = inv.platform_id
+        p_name = inv.platform.name if inv.platform else "Sin plataforma"
+        if p_id not in by_platform:
+            idx = len(by_platform)
+            color = _PLATFORM_COLORS[idx % len(_PLATFORM_COLORS)] if p_id is not None else "#9ca3af"
+            by_platform[p_id] = {
+                "platform_id": p_id,
+                "platform_name": p_name,
+                "total_converted": Decimal("0"),
+                "investment_count": 0,
+                "color": color,
+            }
+        by_platform[p_id]["total_converted"] += converted
+        by_platform[p_id]["investment_count"] += 1
+
         investment_summaries.append(
             InvestmentSummary(
                 id=inv.id,
@@ -95,12 +117,18 @@ def get_portfolio_summary(db: Session, target_currency: str) -> PortfolioSummary
         key=lambda x: x.total_converted,
         reverse=True,
     )
+    plat_breakdown = sorted(
+        [PlatformBreakdown(**v, percentage=pct(v["total_converted"])) for v in by_platform.values()],
+        key=lambda x: x.total_converted,
+        reverse=True,
+    )
 
     return PortfolioSummary(
         target_currency=target_currency,
         total_net_worth=total,
         by_asset_type=at_breakdown,
         by_currency=cur_breakdown,
+        by_platform=plat_breakdown,
         investments=sorted(investment_summaries, key=lambda x: x.current_amount_converted, reverse=True),
     )
 

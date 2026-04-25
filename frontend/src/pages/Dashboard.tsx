@@ -174,6 +174,55 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Platform breakdown */}
+      <div className="card p-6">
+        <h2 className="font-semibold text-gray-900 mb-4">Por plataforma</h2>
+        {loadingSummary ? (
+          <div className="h-48 bg-gray-50 animate-pulse rounded-lg" />
+        ) : (summary?.by_platform.length ?? 0) === 0 ? (
+          <div className="h-48 flex items-center justify-center text-gray-400 text-sm">
+            Sin inversiones aún
+          </div>
+        ) : (
+          <div className="flex items-center gap-6">
+            <ResponsiveContainer width={160} height={160}>
+              <PieChart>
+                <Pie
+                  data={summary?.by_platform}
+                  dataKey="total_converted"
+                  nameKey="platform_name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={45}
+                  outerRadius={75}
+                >
+                  {summary?.by_platform.map((entry) => (
+                    <Cell key={entry.platform_id ?? "none"} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(v: number) => [formatCurrency(v, currency)]} />
+              </PieChart>
+            </ResponsiveContainer>
+            <ul className="flex-1 space-y-2">
+              {summary?.by_platform.map((entry) => (
+                <li key={entry.platform_id ?? "none"} className="flex items-center gap-2">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full shrink-0"
+                    style={{ background: entry.color }}
+                  />
+                  <span className="text-sm text-gray-700 flex-1 truncate">
+                    {entry.platform_name}
+                  </span>
+                  <span className="text-sm font-medium text-gray-900 font-mono">
+                    {entry.percentage.toFixed(1)}%
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
       {/* Investments table */}
       <div className="card overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100">

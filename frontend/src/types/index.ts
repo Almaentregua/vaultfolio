@@ -80,11 +80,21 @@ export interface CurrencyBreakdown {
   percentage: number;
 }
 
+export interface PlatformBreakdown {
+  platform_id: number | null;
+  platform_name: string;
+  total_converted: number;
+  percentage: number;
+  investment_count: number;
+  color: string;
+}
+
 export interface PortfolioSummary {
   target_currency: string;
   total_net_worth: number;
   by_asset_type: AssetTypeBreakdown[];
   by_currency: CurrencyBreakdown[];
+  by_platform: PlatformBreakdown[];
   investments: InvestmentSummary[];
 }
 
