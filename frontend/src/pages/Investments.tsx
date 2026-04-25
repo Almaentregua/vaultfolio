@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FileDown, Plus, Trash2, TrendingUp } from "lucide-react";
+import { FileDown, Pencil, Plus, Trash2, TrendingUp } from "lucide-react";
 import { assetTypesApi, exportsApi, investmentsApi, platformsApi } from "@/services/api";
-import type { CreateInvestmentData, Investment } from "@/types";
+import type { CreateInvestmentData, Investment, UpdateInvestmentData } from "@/types";
 import { COMMON_CURRENCIES } from "@/types";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/utils";
 
@@ -81,6 +81,113 @@ function AddRecordModal({
             className="btn-primary"
             onClick={() => mutation.mutate()}
             disabled={!amount || mutation.isPending}
+          >
+            {mutation.isPending ? "Guardando..." : "Guardar"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Edit Investment Modal ─────────────────────────────────────────────────────
+
+function EditInvestmentModal({
+  investment,
+  onClose,
+}: {
+  investment: Investment;
+  onClose: () => void;
+}) {
+  const qc = useQueryClient();
+  const { data: assetTypes = [] } = useQuery({
+    queryKey: ["asset-types"],
+    queryFn: assetTypesApi.list,
+  });
+  const { data: platforms = [] } = useQuery({
+    queryKey: ["platforms"],
+    queryFn: platformsApi.list,
+  });
+
+  const [form, setForm] = useState<UpdateInvestmentData>({
+    name: investment.name,
+    asset_type_id: investment.asset_type_id,
+    platform_id: investment.platform_id ?? undefined,
+  });
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      investmentsApi.update(investment.id, {
+        ...form,
+        asset_type_id: Number(form.asset_type_id),
+        platform_id: form.platform_id || undefined,
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["investments"] });
+      qc.invalidateQueries({ queryKey: ["portfolio"] });
+      onClose();
+    },
+  });
+
+  const set = (key: keyof UpdateInvestmentData, value: unknown) =>
+    setForm((f) => ({ ...f, [key]: value }));
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+      <div className="card w-full max-w-md p-6 space-y-4">
+        <h2 className="font-semibold text-gray-900">Editar inversión</h2>
+
+        <div>
+          <label className="label">Nombre</label>
+          <input
+            type="text"
+            className="input"
+            value={form.name}
+            onChange={(e) => set("name", e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label className="label">Tipo de activo</label>
+          <select
+            className="input"
+            value={form.asset_type_id}
+            onChange={(e) => set("asset_type_id", Number(e.target.value))}
+          >
+            {assetTypes.map((at) => (
+              <option key={at.id} value={at.id}>
+                {at.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="label">Plataforma (opcional)</label>
+          <select
+            className="input"
+            value={form.platform_id ?? ""}
+            onChange={(e) =>
+              set("platform_id", e.target.value ? Number(e.target.value) : undefined)
+            }
+          >
+            <option value="">Sin plataforma</option>
+            {platforms.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex gap-3 justify-end pt-2">
+          <button className="btn-secondary" onClick={onClose}>
+            Cancelar
+          </button>
+          <button
+            className="btn-primary"
+            onClick={() => mutation.mutate()}
+            disabled={!form.name || !form.asset_type_id || mutation.isPending}
           >
             {mutation.isPending ? "Guardando..." : "Guardar"}
           </button>
@@ -249,6 +356,7 @@ export default function Investments() {
   const qc = useQueryClient();
   const [showAdd, setShowAdd] = useState(false);
   const [recordTarget, setRecordTarget] = useState<Investment | null>(null);
+  const [editTarget, setEditTarget] = useState<Investment | null>(null);
   const [filterType, setFilterType] = useState<string>("all");
   const [filterPlatform, setFilterPlatform] = useState<string>("all");
 
@@ -424,6 +532,13 @@ export default function Investments() {
                         <TrendingUp className="w-4 h-4" />
                       </button>
                       <button
+                        className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+                        title="Editar"
+                        onClick={() => setEditTarget(inv)}
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                      <button
                         className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
                         title="Eliminar"
                         onClick={() => {
@@ -448,6 +563,12 @@ export default function Investments() {
         <AddRecordModal
           investment={recordTarget}
           onClose={() => setRecordTarget(null)}
+        />
+      )}
+      {editTarget && (
+        <EditInvestmentModal
+          investment={editTarget}
+          onClose={() => setEditTarget(null)}
         />
       )}
     </div>
